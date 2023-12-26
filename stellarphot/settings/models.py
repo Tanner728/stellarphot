@@ -80,3 +80,5 @@ class PhotometryFileSettings(BaseModel):
     aperture_locations_file: Path = Field(
         filter_pattern=["*.ecsv", "*.csv"], default=""
     )
+
+'fdsfafdafafdasdfasdfda'
