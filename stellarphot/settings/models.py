@@ -112,6 +112,45 @@ class SkyCoordType(SkyCoord):
 
 
 class Exoplanet(BaseModel):
+    """
+    Create an object representing an Exoplanet.
+
+    Parameters
+    ----------
+
+    epoch : TimeType
+        Epoch of the exoplanet as an astropy Time object, not required.
+
+    period : QuantityType
+        Period of the exoplanet as a Quantity with units of time, not required.
+
+    Identifier : Str
+        Identifier of the exoplanet as a string, required.
+
+    coordinate : SkyCoordType
+        Coordinates of the exoplanet as an astropy SkyCoord object, required. 
+    
+    depth : float
+        Depth of the exoplanet object as a float, not required.
+
+    duration : QuantityType
+        Duration of the exoplanet transit as a Quantity with units of time, not required. 
+
+    Examples
+    --------
+
+    To create an `Exoplanet` object, you can pass in the epoch, period, Identifier, coordinate, depth,
+    and duration as keyword arguments:
+
+    >>> planet  = Exoplanet(
+        epoch=Time(0, format="jd"),
+        period=0 * u.min,
+        identifier="",
+        coordinate=SkyCoord(ra="00:00:00.00", dec="+00:00:00.0", frame="icrs", unit=("hour", "degree")),
+        depth=0,
+        duration=0 * u.min,)
+    """
+    
     epoch: TimeType | None = None
     period: QuantityType | None = None
     identifier: str
