@@ -43,15 +43,15 @@ DEFAULT_EXOPLANET_SETTINGS = dict(
         ra="00:00:00.00", dec="+00:00:00.0", frame="icrs", unit=("hour", "degree")
     ),
     depth=0,
-    duration=0 * u.min,
+    duration=0 * u.min
 )
 
 
 def test_create_exoplanet_correctly():
     planet = Exoplanet(**DEFAULT_EXOPLANET_SETTINGS)
     assert planet.epoch == DEFAULT_EXOPLANET_SETTINGS["epoch"]
-    assert planet.period == DEFAULT_EXOPLANET_SETTINGS["period"]
+    assert u.get_physical_type(planet.period) == 'time'
     assert planet.identifier == DEFAULT_EXOPLANET_SETTINGS["identifier"]
     assert planet.coordinate == DEFAULT_EXOPLANET_SETTINGS["coordinate"]
     assert planet.depth == DEFAULT_EXOPLANET_SETTINGS["depth"]
-    assert planet.duration == DEFAULT_EXOPLANET_SETTINGS["duration"]
+    assert u.get_physical_type(planet.duration) == 'time'

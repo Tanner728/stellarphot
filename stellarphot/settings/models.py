@@ -142,13 +142,7 @@ class Exoplanet(BaseModel):
     To create an `Exoplanet` object, you can pass in the epoch, period, Identifier, coordinate, depth,
     and duration as keyword arguments:
 
-    >>> planet  = Exoplanet(
-        epoch=Time(0, format="jd"),
-        period=0 * u.min,
-        identifier="",
-        coordinate=SkyCoord(ra="00:00:00.00", dec="+00:00:00.0", frame="icrs", unit=("hour", "degree")),
-        depth=0,
-        duration=0 * u.min,)
+    >>> planet  = Exoplanet(epoch=Time(0, format="jd"), period=0 * u.min, identifier="TIC_2312323", coordinate=SkyCoord(ra="00:00:00.00", dec="+00:00:00.0", frame="icrs", unit=("hour", "degree")), depth=0, duration=0 * u.min)
     """
     
     epoch: TimeType | None = None
