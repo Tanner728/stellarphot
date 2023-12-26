@@ -74,7 +74,7 @@ def test_camera_unitscheck():
 
 def test_camera_negative_max_adu():
     # Check that the units are checked properly
-    data_unit = u.adu
+    _ = u.adu
     gain = 2.0 * u.electron / u.adu
     read_noise = 10 * u.electron
     dark_current = 0.01 * u.electron / u.second
@@ -94,7 +94,7 @@ def test_camera_negative_max_adu():
 
 
 def test_camera_incompatible_gain_units():
-    data_unit = u.adu
+    _ = u.adu
     gain = 2.0 * u.count / u.adu
     read_noise = 10 * u.electron
     dark_current = 0.01 * u.electron / u.second
@@ -114,7 +114,7 @@ def test_camera_incompatible_gain_units():
 
 
 def test_camera_incompatible_max_val_units():
-    data_unit = u.adu
+    _ = u.adu
     gain = 2.0 * u.electron / u.adu
     read_noise = 10 * u.electron
     dark_current = 0.01 * u.electron / u.second
@@ -269,14 +269,16 @@ def test_base_enhanced_table_blank():
 
 def test_base_enhanced_table_from_existing_table():
     # Should create a populated dataset properly and display the astropy data
-    test_base2 = BaseEnhancedTable(table_description=test_descript, input_data=testdata)
+    test_base2 = BaseEnhancedTable(
+        table_description=test_descript, input_data=testdata)
     assert len(test_base2["ra"]) == 1
     assert len(test_base2["dec"]) == 1
 
 
 def test_base_enhanced_table_clean():
     # Check that the clean method exists
-    test_base = BaseEnhancedTable(table_description=test_descript, input_data=testdata)
+    test_base = BaseEnhancedTable(
+        table_description=test_descript, input_data=testdata)
     # Add a row so that we can clean something
     test_base_two = test_base.copy()
     test_base_two.add_row(test_base[0])
@@ -287,7 +289,8 @@ def test_base_enhanced_table_clean():
 
 
 def a_table(masked=False):
-    test_table = Table([(1, 2, 3), (1, -1, -2)], names=("a", "b"), masked=masked)
+    test_table = Table(
+        [(1, 2, 3), (1, -1, -2)], names=("a", "b"), masked=masked)
     test_table = BaseEnhancedTable(
         table_description={"a": None, "b": None}, input_data=test_table
     )
@@ -306,7 +309,8 @@ def test_bet_clean_criteria_none_removed():
 
 
 @pytest.mark.parametrize(
-    "condition,input_row", [(">0", 0), ("=1", 0), (">=1", 0), ("<-1", 2), ("=-1", 1)]
+    "condition,input_row",
+    [(">0", 0), ("=1", 0), (">=1", 0), ("<-1", 2), ("=-1", 1)]
 )
 def test_bet_clean_criteria_some_removed(condition, input_row):
     """
@@ -322,7 +326,9 @@ def test_bet_clean_criteria_some_removed(condition, input_row):
 
 @pytest.mark.parametrize(
     "criteria,error_msg",
-    [({"a": "5"}, "not understood"), ({"a": "<foo"}, "could not convert string")],
+    [({"a": "5"}, "not understood"),
+     ({"a": "<foo"},
+     "could not convert string")],
 )
 def test_clean_bad_criteria(criteria, error_msg):
     """
@@ -389,7 +395,7 @@ def test_base_enhanced_table_missing_column():
     testdata_nora = testdata.copy()
     testdata_nora.remove_column("ra")
     with pytest.raises(ValueError):
-        test_base = BaseEnhancedTable(
+        _ = BaseEnhancedTable(
             table_description=test_descript, input_data=testdata_nora
         )
 
@@ -400,20 +406,21 @@ def test_base_enhanced_table_missing_badunits():
     bad_ra_descript[1, 2] = u.hr
 
     with pytest.raises(ValueError):
-        test_base = BaseEnhancedTable(
+        _ = BaseEnhancedTable(
             table_description=bad_ra_descript, input_data=testdata
         )
 
 
 def test_base_enhanced_table_recursive():
     # Should create a populated dataset properly and display the astropy data
-    test_base2 = BaseEnhancedTable(table_description=test_descript, input_data=testdata)
+    test_base2 = BaseEnhancedTable(
+        table_description=test_descript, input_data=testdata)
     assert len(test_base2["ra"]) == 1
     assert len(test_base2["dec"]) == 1
 
     # Attempt recursive call
     with pytest.raises(TypeError):
-        test_base3 = BaseEnhancedTable(
+        _ = BaseEnhancedTable(
             table_description=test_descript, input_data=test_base2
         )
 
@@ -604,8 +611,10 @@ for this_col, this_unit in phot_descript.items():
     testphot_goodUnits[this_col].unit = this_unit
 
 # Fix the units for the counts-related columns
-counts_columns = ["aperture_sum", "annulus_sum", "aperture_net_cnts", "noise_cnts"]
-counts_per_pixel_sqr_columns = ["sky_per_pix_avg", "sky_per_pix_med", "sky_per_pix_std"]
+counts_columns = [
+    "aperture_sum", "annulus_sum", "aperture_net_cnts", "noise_cnts"]
+counts_per_pixel_sqr_columns = [
+    "sky_per_pix_avg", "sky_per_pix_med", "sky_per_pix_std"]
 for this_col in counts_columns:
     testphot_goodUnits[this_col].unit = u.adu
 for this_col in counts_per_pixel_sqr_columns:
@@ -654,7 +663,8 @@ def test_photometry_data():
     # Elevation 311
     # RA 78.17278712191924
     # Dec 22 30 20.77733059
-    # which returned 2459910.775405664 (Uses custom IDL, astropy is SOFA checked).
+    # which returned 2459910.775405664 (Uses custom IDL,
+    # astropy is SOFA checked).
     # Demand a difference of less than 1/20 of a second.
     assert (phot_data["bjd"][0].value - 2459910.775405664) * 86400 < 0.05
 
@@ -703,7 +713,7 @@ def test_photometry_recursive():
 
 def test_photometry_badtime():
     with pytest.raises(ValueError):
-        phot_data = PhotometryData(
+        _ = PhotometryData(
             observatory=feder_obs,
             camera=feder_cg_16m,
             passband_map=feder_passbands,
@@ -713,7 +723,7 @@ def test_photometry_badtime():
 
 def test_photometry_inconsistent_count_units():
     with pytest.raises(ValueError):
-        phot_data = PhotometryData(
+        _ = PhotometryData(
             observatory=feder_obs,
             camera=feder_cg_16m,
             passband_map=feder_passbands,
@@ -737,7 +747,8 @@ def test_photometry_inconsistent_computed_col_exists():
         input_data=testphot_goodUnits,
         retain_user_computed=True,
     )
-    # This keeps a bad user column for 'snr' which has bogus units, so check the units
+    # This keeps a bad user column for 'snr' which has bogus units,
+    # so check the units
     # cause a crash in the math.
     with pytest.raises(u.core.UnitConversionError):
         assert np.abs(phot_data["snr"][0] - 46.795229859903905) < 1e-6
@@ -746,14 +757,15 @@ def test_photometry_inconsistent_computed_col_exists():
 
 # Load test catalog
 test_cat = ascii.read(
-    get_pkg_data_filename("data/test_vsx_table.ecsv"), format="ecsv", fast_reader=False
+    get_pkg_data_filename("data/test_vsx_table.ecsv"), format="ecsv",
+    fast_reader=False
 )
 
 
 def test_catalog_missing_col():
     # Fails with ValueError due to not having 'ra' column
     with pytest.raises(ValueError):
-        catalog_dat = CatalogData(
+        _ = CatalogData(
             input_data=test_cat, catalog_name="VSX", catalog_source="Vizier"
         )
 
@@ -822,7 +834,7 @@ def test_catalog_recursive():
 
     # Attempt recursive call
     with pytest.raises(TypeError):
-        catalog_dat2 = CatalogData(
+        _ = CatalogData(
             input_data=catalog_dat,
             catalog_name="VSX",
             catalog_source="Vizier",
@@ -833,7 +845,8 @@ def test_catalog_recursive():
 def test_tidy_vizier_catalog():
     # Test just the part of the code that converts the table returned by Vizier
     # into a table that can be used by CatalogData.
-    apass_input = Table.read(get_pkg_data_filename("data/test_apass_subset.ecsv"))
+    apass_input = Table.read(get_pkg_data_filename(
+        "data/test_apass_subset.ecsv"))
 
     result = CatalogData._tidy_vizier_catalog(
         apass_input,
@@ -852,16 +865,18 @@ def test_tidy_vizier_catalog():
     one_Vmag = 13.399
     one_Vmag_error = 0.075
 
-    just_one = result[(result["recno"] == one_star) & (result["passband"] == "V")]
+    just_one = result[(result["recno"] == one_star) &
+                      (result["passband"] == "V")]
     assert np.abs(just_one["mag"][0] - one_Vmag) < 1e-6
     assert np.abs(just_one["mag_error"][0] - one_Vmag_error) < 1e-6
 
 
 def test_tidy_vizier_catalog_several_mags():
     # Test table conversion when there are several magnitude columns.
-    apass_input = Table.read(get_pkg_data_filename("data/test_apass_subset.ecsv"))
+    apass_input = Table.read(get_pkg_data_filename(
+        "data/test_apass_subset.ecsv"))
 
-    # Make sure the columns we exxpect in the teset data are there before proceeding
+    # Make sure the columns we expect in the test data exists before proceeding
     assert "Vmag" in apass_input.colnames
     assert "i_mag" in apass_input.colnames
     assert "B-V" in apass_input.colnames
@@ -888,8 +903,8 @@ def test_catalog_from_vizier_search_apass():
     radius = 0.03 * u.deg
 
     apass_colnames = {
-        "recno": "id",  # There is no APASS ID, this is the one generated by Vizier
-        "RAJ2000": "ra",
+        "recno": "id",  # There is no APASS ID,
+        "RAJ2000": "ra",  # this is the one generated by Vizier
         "DEJ2000": "dec",
     }
 
@@ -965,7 +980,8 @@ def test_from_vizier_with_coord_and_frame_clip_fails():
 @pytest.mark.remote_data
 @pytest.mark.parametrize(
     "clip, data_file",
-    [(True, "data/clipped_ey_uma_vsx.fits"), (False, "data/unclipped_ey_uma_vsx.fits")],
+    [(True, "data/clipped_ey_uma_vsx.fits"),
+     (False, "data/unclipped_ey_uma_vsx.fits")],
 )
 def test_vsx_results(clip, data_file):
     # Check that a catalog search of VSX gives us what we expect.
@@ -991,7 +1007,8 @@ def test_vsx_results(clip, data_file):
     # Turn this into an HDU to get the standard FITS image keywords
     ccd_im = ccd.to_hdu()
 
-    actual = vsx_vizier(ccd_im[0].header, radius=0.5 * u.degree, clip_by_frame=clip)
+    actual = vsx_vizier(ccd_im[0].header, radius=0.5 * u.degree,
+                        clip_by_frame=clip)
     assert set(actual["OID"]) == set(expected["OID"])
 
 
@@ -1030,12 +1047,14 @@ def test_find_apass():
 
     # It is hard to imagine the RAs matching and other entries not matching,
     # so just check the RAs.
-    assert set(ra.value for ra in all_apass["ra"]) == set(expected_all["RAJ2000"])
+    assert set(ra.value for ra in all_apass["ra"]) == set(
+        expected_all["RAJ2000"])
 
 
 # Load test apertures
 test_sl_data = ascii.read(
-    get_pkg_data_filename("data/test_sourcelist.ecsv"), format="ecsv", fast_reader=False
+    get_pkg_data_filename("data/test_sourcelist.ecsv"), format="ecsv",
+    fast_reader=False
 )
 
 
@@ -1071,12 +1090,12 @@ def test_sourcelist_missing_cols():
     del test_sl_data4["xcenter"]
     del test_sl_data4["ycenter"]
     with pytest.raises(ValueError):
-        sl_test = SourceListData(input_data=test_sl_data4, colname_map=None)
+        _ = SourceListData(input_data=test_sl_data4, colname_map=None)
 
     test_sl_data5 = test_sl_data.copy()
     del test_sl_data5["star_id"]
     with pytest.raises(ValueError):
-        sl_test = SourceListData(input_data=test_sl_data5, colname_map=None)
+        _ = SourceListData(input_data=test_sl_data5, colname_map=None)
 
 
 def test_sourcelist_recursive():
@@ -1086,7 +1105,7 @@ def test_sourcelist_recursive():
 
     # Attempt recursive call
     with pytest.raises(TypeError):
-        sl_test2 = SourceListData(input_data=sl_test, colname_map=None)
+        _ = SourceListData(input_data=sl_test, colname_map=None)
 
 
 def test_sourcelist_dropping_skycoords():
